@@ -41,7 +41,7 @@ app:
 # ===============================================================
 schedule:
   enabled: true                         # 是否启用调度系统
-  preset: "morning_evening"             # 预设模板名称（见上方说明）
+  preset: "always_on"                  # ← 已改
 
 
 # ===============================================================
@@ -151,7 +151,7 @@ rss:
 # - incremental：最少打扰，只看新增
 # ===============================================================
 report:
-  mode: "current"                     # daily | current | incremental（schedule 开启时作为默认值）
+  mode: "incremental"                  # ← 已改
 
   display_mode: "keyword"             # 分组维度: keyword | platform
                                       # keyword: 按关键词分组显示（默认）
@@ -175,10 +175,10 @@ report:
 # 2) keyword 模式：看 config/frequency_words.txt
 # 3) ai 模式：看 config/ai_interests.txt + 下方 ai_filter 配置
 # 4) priority_sort_enabled 只影响 ai 模式标签排序
-# 5) 这里决定“筛选路径”，不决定 AI 模型（模型在 ai 段）
+# 5) 这里决定"筛选路径"，不决定 AI 模型（模型在 ai 段）
 # ===============================================================
 filter:
-  method: "ai"                     # 可选: keyword | ai
+  method: "keyword"                    # ← 已改
 
   # AI 模式标签排序开关（仅 ai 模式生效）
   # true: 按标签优先级排序（来自兴趣描述提取顺序）
@@ -197,7 +197,7 @@ filter:
 # 5) prompt_file 系列属于进阶项，默认一般不用改
 #
 # 进阶说明：
-# - min_score 越高，结果越“准”但会漏召回
+# - min_score 越高，结果越"准"但会漏召回
 # - reclassify_threshold 越低，越倾向全量重分类（更耗 token）
 # - 模型配置统一在下方 ai 段
 # ===============================================================
@@ -212,7 +212,7 @@ ai_filter:
 
   # 兴趣描述文件
   # 默认使用 config/ai_interests.txt，无需在此配置
-  # 这里设置的是“全局默认”，可被 timeline.yaml 时段内的 interests_file 覆盖
+  # 这里设置的是"全局默认"，可被 timeline.yaml 时段内的 interests_file 覆盖
   # 如需使用自定义文件，将文件放入 config/custom/ai/ 目录，然后指定文件名：
   # interests_file: "finance.txt"    # → 加载 config/custom/ai/finance.txt
 
@@ -499,23 +499,23 @@ ai_analysis:
                                     # 热榜优先占用配额，RSS 使用剩余配额；独立展示区不受此限制
                                     # 推送消息顶部会显示实际的 AI 分析数供参考
 
-                                    # api 成本估算 (仅供参考)
-                                      # 按默认模型(deepseek)
-                                      # max_news_for_analysis 为 【50】 条
-                                      # include_rank_timeline 为 【false】
-                                    # 则
-                                      # GitHub Action 部署默认推送约 20 次（每小时推送一次）， 约 0.1 元/天
-                                      # Docker 部署默认推送 48 次(每半小时推送一次)， 约 0.2 元/天
+  # api 成本估算 (仅供参考)
+  # 按默认模型(deepseek)
+  # max_news_for_analysis 为 【50】 条
+  # include_rank_timeline 为 【false】
+  # 则
+  # GitHub Action 部署默认推送约 20 次（每小时推送一次）， 约 0.1 元/天
+  # Docker 部署默认推送 48 次(每半小时推送一次)， 约 0.2 元/天
 
-  include_rss: false                # 是否包含 RSS 内容进行分析
-  
-  include_standalone: true          # 是否将独立展示区数据纳入 AI 分析
-                                    # 数据源列表来自 display.standalone.platforms / display.standalone.rss_feeds
+  include_rss: false                 # 是否包含 RSS 内容进行分析
 
-  include_rank_timeline: true       # 是否传递完整排名时间线
-                                    # false: 使用简化格式（排名范围+时间范围+出现次数）
-                                    # true: 传递完整排名变化轨迹（如 1(09:30)→2(10:00)→0(11:00)）
-                                    # 启用后 AI 能更精确分析热度趋势，但会额外增加 token 消耗（0.5 倍到 1 倍）
+  include_standalone: true            # 是否将独立展示区数据纳入 AI 分析
+                                      # 数据源列表来自 display.standalone.platforms / display.standalone.rss_feeds
+
+  include_rank_timeline: true         # 是否传递完整排名时间线
+                                      # false: 使用简化格式（排名范围+时间范围+出现次数）
+                                      # true: 传递完整排名变化轨迹（如 1(09:30)→2(10:00)→0(11:00)）
+                                      # 启用后 AI 能更精确分析热度趋势，但会额外增加 token 消耗（0.5 倍到 1 倍）
 
 
 
@@ -527,7 +527,7 @@ ai_analysis:
 # 模型配置见上方 ai 配置段
 # ===============================================================
 ai_translation:
-  enabled: true                    # 是否启用翻译功能
+  enabled: true                       # 是否启用翻译功能
 
   # 翻译目标语言
   # 格式：自然语言描述
@@ -544,9 +544,9 @@ ai_translation:
   # standalone: 独立展示区（热榜平台 + RSS 源）
   # 如果 display.regions 关闭了显示，那么这边即使开启了也不会翻译
   scope:
-    hotlist: false                  # 热榜区域
-    rss: true                      # RSS 区域
-    standalone: true               # 独立展示区
+    hotlist: false                   # 热榜区域
+    rss: true                        # RSS 区域
+    standalone: true                  # 独立展示区
 
 
 # ===============================================================
@@ -563,22 +563,22 @@ advanced:
 
   # 热榜爬虫技术参数
   crawler:
-    request_interval: 2000            # 请求间隔（毫秒）
-    use_proxy: false                  # 是否启用代理
+    request_interval: 2000             # 请求间隔（毫秒）
+    use_proxy: false                   # 是否启用代理
     default_proxy: "http://127.0.0.1:10801"
 
   # RSS 设置
   rss:
     request_interval: 1000            # 请求间隔（毫秒）
-    timeout: 15                       # 请求超时（秒）
-    use_proxy: false                  # 是否使用代理
-    proxy_url: ""                     # RSS 专属代理（留空则使用 crawler.default_proxy）
+    timeout: 15                        # 请求超时（秒）
+    use_proxy: false                   # 是否使用代理
+    proxy_url: ""                      # RSS 专属代理（留空则使用 crawler.default_proxy）
 
   # 排序权重（用于重新排序不同平台的热搜）
   # 合起来等于 1
   weight:
     rank: 0.6                         # 排名权重
-    frequency: 0.3                    # 频次权重
+    frequency: 0.3                     # 频次权重
     hotness: 0.1                      # 热度权重
 
   # 多账号限制
@@ -592,5 +592,5 @@ advanced:
     feishu: 30000
     bark: 4000
     slack: 4000
-  batch_send_interval: 3              # 批次发送间隔（秒）
+  batch_send_interval: 3               # 批次发送间隔（秒）
   feishu_message_separator: "━━━━━━━━━━━━━━━━"
